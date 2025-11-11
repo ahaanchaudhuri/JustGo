@@ -1,0 +1,21 @@
+{
+    "manifest_version": 3,
+    "name": "JustGo",
+    "version": "1.0",
+    "description": "A simple extension that lets you create your own custom URL shortcuts.",
+    "icons": {
+        "16": "icons/logo64.png",
+        "48": "icons/logo128.png",
+        "128": "icons/logo128.png",
+        "256": "icons/logo256.png",
+        "512": "icons/logo512.png"
+    },
+    "permissions": [
+        "declarativeNetRequest",
+        "storage"
+    ],
+    "host_permissions": [
+        "*://*/*"
+    ],
+    "options_page": "options.html"
+}
