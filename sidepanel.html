@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JustGo - Shortcuts</title>
+    <link rel="stylesheet" href="options.css">
+    <style>
+        body {
+            padding: 0;
+        }
+
+        .container {
+            max-width: 100%;
+            border-radius: 0;
+            box-shadow: none;
+            min-height: 100vh;
+        }
+
+        .header {
+            padding: 20px;
+        }
+
+        .header .logo {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 12px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 12px;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .add-form {
+            margin-bottom: 24px;
+            padding: 16px;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .form-row .btn-primary {
+            width: 100%;
+        }
+
+        .mappings-section h2 {
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+
+        .mappings-table {
+            font-size: 13px;
+        }
+
+        .mappings-table th,
+        .mappings-table td {
+            padding: 12px;
+            font-size: 13px;
+        }
+
+        .mappings-table th:first-child,
+        .mappings-table td:first-child {
+            max-width: 120px;
+        }
+
+        .mappings-table th:nth-child(2),
+        .mappings-table td:nth-child(2) {
+            max-width: 0;
+        }
+
+        .btn-delete {
+            padding: 6px 12px;
+            font-size: 11px;
+        }
+
+        .empty-state {
+            padding: 40px 20px;
+        }
+
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="icons/logo128.png" alt="JustGo Logo" class="logo">
+            <h1>JustGo Shortcuts</h1>
+            <p>Quick access to your shortcuts</p>
+        </div>
+        <div class="content">
+            <div id="message" class="message"></div>
+            
+            <div class="add-form">
+                <form id="addForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="shortcutHost">Shortcut Host</label>
+                            <input 
+                                type="text" 
+                                id="shortcutHost" 
+                                placeholder="e.g., frontend.dev, docs" 
+                                required
+                            >
+                            <div class="form-hint" id="hostHint"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="destinationUrl">Destination URL</label>
+                            <input 
+                                type="text" 
+                                id="destinationUrl" 
+                                placeholder="http://localhost:5173/" 
+                                required
+                            >
+                            <div class="form-hint">Protocol added automatically if missing</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Shortcut</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="mappings-section">
+                <h2>Your Shortcuts</h2>
+                <div id="mappingsContainer">
+                    <table class="mappings-table" id="mappingsTable" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>Shortcut</th>
+                                <th>URL</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mappingsTableBody">
+                        </tbody>
+                    </table>
+                    <div id="emptyState" class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                        <p>No shortcuts yet. Add your first shortcut above!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="options.js"></script>
+</body>
+</html>
+

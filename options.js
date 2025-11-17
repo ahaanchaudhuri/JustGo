@@ -203,7 +203,9 @@ function renderMappings() {
         
         row.innerHTML = `
             <td class="shortcut-cell">${escapeHtml(displayHost)}</td>
-            <td class="url-cell">${escapeHtml(url)}</td>
+            <td class="url-cell">
+                <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="url-link">${escapeHtml(url)}</a>
+            </td>
             <td>
                 <button class="btn btn-delete" data-host="${escapeHtml(host)}">Delete</button>
             </td>

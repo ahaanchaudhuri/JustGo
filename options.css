@@ -213,7 +213,30 @@ body {
 
 .url-cell {
     color: rgba(229, 231, 235, 0.7);
-    word-break: break-all;
+    max-width: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+.url-link {
+    color: rgba(229, 231, 235, 0.8);
+    text-decoration: none;
+    transition: all 0.2s;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-bottom: 1px solid transparent;
+}
+
+.url-link:hover {
+    color: #E5E7EB;
+    border-bottom-color: rgba(229, 231, 235, 0.3);
+}
+
+.url-link:active {
+    color: rgba(229, 231, 235, 0.9);
 }
 
 .btn-delete {

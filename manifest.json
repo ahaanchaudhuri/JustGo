@@ -12,10 +12,27 @@
     },
     "permissions": [
         "declarativeNetRequest",
-        "storage"
+        "storage",
+        "sidePanel",
+        "tabs"
     ],
     "host_permissions": [
         "*://*/*"
     ],
-    "options_page": "options.html"
+    "background": {
+        "service_worker": "background.js"
+    },
+    "commands": {
+        "open-sidepanel": {
+            "suggested_key": {
+                "default": "Ctrl+Period"
+            },
+            "description": "Open JustGo side panel"
+        }
+    },
+    "options_page": "options.html",
+    
+    "side_panel": {
+        "default_path": "sidepanel.html"
+    }
 }
