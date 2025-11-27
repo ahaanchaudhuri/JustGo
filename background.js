@@ -12,11 +12,18 @@ chrome.commands.onCommand.addListener((command) => {
                 console.log('Tab URL:', tabUrl);
                 
                 if (!sidePanelOpened) {
+                    // Store the current tab URL for prefilling the form (only for regular web pages)
+                    if (tabUrl && !tabUrl.startsWith('chrome://') && !tabUrl.startsWith('chrome-extension://')) {
+                        console.log('Storing pending destination URL:', tabUrl);
+                        chrome.storage.local.set({ pendingDestinationUrl: tabUrl });
+                    }
                     chrome.sidePanel.open({ tabId: tabId });
                     sidePanelOpened = true;
                 } else {
                     chrome.sidePanel.close({ tabId: tabId });
                     sidePanelOpened = false;
+                    // Clear the pending URL when closing
+                    chrome.storage.local.remove('pendingDestinationUrl');
                 }
             }
         });

@@ -1,4 +1,5 @@
-// Options page functionality
+// Sidepanel functionality
+console.log('sidepanel.js loaded');
 let mappings = {};
 
 const addForm = document.getElementById('addForm');
@@ -8,9 +9,6 @@ const mappingsTable = document.getElementById('mappingsTable');
 const mappingsTableBody = document.getElementById('mappingsTableBody');
 const emptyState = document.getElementById('emptyState');
 const messageDiv = document.getElementById('message');
-const exportBtn = document.getElementById('exportBtn');
-const importBtn = document.getElementById('importBtn');
-const fileInput = document.getElementById('fileInput');
 const hostHint = document.getElementById('hostHint');
 
 function showMessage(text, type) {
@@ -121,6 +119,7 @@ async function addMapping(host, url) {
         hostHint.textContent = '';
         hostHint.className = 'form-hint';
         shortcutHostInput.focus();
+        chrome.storage.local.remove('pendingDestinationUrl');
         return true;
     } catch (error) {
         showMessage('Error saving shortcut: ' + error.message, 'error');
@@ -129,52 +128,29 @@ async function addMapping(host, url) {
     }
 }
 
-function exportMappings() {
-    const dataStr = JSON.stringify(mappings, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'justgo-shortcuts-' + new Date().toISOString().split('T')[0] + '.json';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-    showMessage('Mappings exported successfully!', 'success');
-}
-
-async function importMappings(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-            try {
-                const imported = JSON.parse(e.target.result);
-                if (typeof imported !== 'object' || Array.isArray(imported)) {
-                    throw new Error('Invalid JSON format. Expected an object.');
-                }
-                const normalizedMappings = {};
-                for (const [host, url] of Object.entries({ ...mappings, ...imported })) {
-                    const validation = validateShortcutHost(host);
-                    if (validation.valid) {
-                        normalizedMappings[validation.normalized] = normalizeDestinationUrl(url);
-                    }
-                }
-                mappings = normalizedMappings;
-                await saveMappings(mappings);
-                await rebuildDNRRules(mappings);
-                renderMappings();
-                showMessage('Mappings imported successfully!', 'success');
-                resolve();
-            } catch (error) {
-                reject(error);
-            }
-        };
-        reader.onerror = () => reject(new Error('Error reading file'));
-        reader.readAsText(file);
+function checkPendingUrl() {
+    console.log('Checking for pending URL');
+    chrome.storage.local.get(['pendingDestinationUrl'], (result) => {
+        console.log('Pending URL result:', result);
+        if (result.pendingDestinationUrl) {
+            destinationUrlInput.value = result.pendingDestinationUrl;
+            console.log('Pending URL set:', result.pendingDestinationUrl);
+            chrome.storage.local.remove('pendingDestinationUrl');
+        } else {
+            console.log('No pending URL found');
+        }
     });
 }
 
+chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName === 'local' && changes.pendingDestinationUrl) {
+        destinationUrlInput.value = changes.pendingDestinationUrl.newValue || '';
+        chrome.storage.local.remove('pendingDestinationUrl');
+    }
+});
+
 addForm.addEventListener('submit', async (e) => {
+    console.log('Form submitted');
     e.preventDefault();
     const host = shortcutHostInput.value.trim();
     const url = destinationUrlInput.value.trim();
@@ -186,26 +162,16 @@ addForm.addEventListener('submit', async (e) => {
 });
 
 shortcutHostInput.addEventListener('input', (e) => {
+    console.log('Updating host hint');
     updateHostHint(e.target.value);
 });
 
-exportBtn.addEventListener('click', exportMappings);
-importBtn.addEventListener('click', () => fileInput.click());
-
-fileInput.addEventListener('change', async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        try {
-            await importMappings(file);
-        } catch (error) {
-            showMessage('Error importing file: ' + error.message, 'error');
-        }
-        fileInput.value = '';
-    }
-});
-
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMappingsData);
+    document.addEventListener('DOMContentLoaded', () => {
+        loadMappingsData();
+        checkPendingUrl();
+    });
 } else {
     loadMappingsData();
+    checkPendingUrl();
 }
