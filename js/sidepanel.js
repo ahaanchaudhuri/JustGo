@@ -5,11 +5,11 @@ let mappings = {};
 const addForm = document.getElementById('addForm');
 const shortcutHostInput = document.getElementById('shortcutHost');
 const destinationUrlInput = document.getElementById('destinationUrl');
-const mappingsTable = document.getElementById('mappingsTable');
-const mappingsTableBody = document.getElementById('mappingsTableBody');
+const shortcutsList = document.getElementById('shortcutsList');
 const emptyState = document.getElementById('emptyState');
 const messageDiv = document.getElementById('message');
 const hostHint = document.getElementById('hostHint');
+const addBtn = document.getElementById('addBtn');
 
 function showMessage(text, type) {
     messageDiv.textContent = text;
@@ -53,32 +53,69 @@ async function loadMappingsData() {
 function renderMappings() {
     const hosts = Object.keys(mappings);
     if (hosts.length === 0) {
-        mappingsTable.style.display = 'none';
+        shortcutsList.style.display = 'none';
         emptyState.style.display = 'block';
         return;
     }
-    mappingsTable.style.display = 'table';
+    shortcutsList.style.display = 'flex';
     emptyState.style.display = 'none';
-    mappingsTableBody.innerHTML = '';
+    shortcutsList.innerHTML = '';
     hosts.forEach(host => {
-        const row = document.createElement('tr');
         const url = mappings[host];
         const displayHost = host.includes('.') ? host : host + '/';
-        row.innerHTML = `
-            <td class="shortcut-cell">${escapeHtml(displayHost)}</td>
-            <td class="url-cell">
-                <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="url-link">${escapeHtml(url)}</a>
-            </td>
-            <td>
-                <button class="btn btn-delete" data-host="${escapeHtml(host)}">Delete</button>
-            </td>
-        `;
-        mappingsTableBody.appendChild(row);
-    });
-    document.querySelectorAll('.btn-delete').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            deleteMapping(e.target.getAttribute('data-host'));
+        
+        const card = document.createElement('div');
+        card.className = 'shortcut-card';
+        
+        const content = document.createElement('div');
+        content.className = 'shortcut-card-content';
+        
+        const icon = document.createElement('div');
+        icon.className = 'shortcut-icon';
+        icon.textContent = '🔗';
+        icon.setAttribute('aria-hidden', 'true');
+        
+        const info = document.createElement('div');
+        info.className = 'shortcut-info';
+        
+        const name = document.createElement('div');
+        name.className = 'shortcut-name';
+        name.textContent = escapeHtml(displayHost);
+        
+        const urlContainer = document.createElement('div');
+        urlContainer.className = 'shortcut-url';
+        
+        const urlLink = document.createElement('a');
+        urlLink.href = escapeHtml(url);
+        urlLink.target = '_blank';
+        urlLink.rel = 'noopener noreferrer';
+        urlLink.className = 'shortcut-url-link';
+        urlLink.textContent = escapeHtml(url);
+        urlLink.title = escapeHtml(url);
+        
+        urlContainer.appendChild(urlLink);
+        info.appendChild(name);
+        info.appendChild(urlContainer);
+        content.appendChild(icon);
+        content.appendChild(info);
+        
+        const actions = document.createElement('div');
+        actions.className = 'shortcut-actions';
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn-delete';
+        deleteBtn.setAttribute('data-host', escapeHtml(host));
+        deleteBtn.setAttribute('aria-label', `Delete shortcut ${escapeHtml(displayHost)}`);
+        deleteBtn.setAttribute('title', 'Delete shortcut');
+        deleteBtn.textContent = '🗑';
+        deleteBtn.addEventListener('click', () => {
+            deleteMapping(host);
         });
+        
+        actions.appendChild(deleteBtn);
+        card.appendChild(content);
+        card.appendChild(actions);
+        shortcutsList.appendChild(card);
     });
 }
 
@@ -179,6 +216,12 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
     }
 });
 
+function updateAddButtonState() {
+    const host = shortcutHostInput.value.trim();
+    const url = destinationUrlInput.value.trim();
+    addBtn.disabled = !host || !url;
+}
+
 addForm.addEventListener('submit', async (e) => {
     console.log('Form submitted');
     e.preventDefault();
@@ -188,20 +231,34 @@ addForm.addEventListener('submit', async (e) => {
         showMessage('Please fill in both fields', 'error');
         return;
     }
-    await addMapping(host, url);
+    
+    // Validate URL format
+    let finalUrl = url;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        finalUrl = 'https://' + url;
+    }
+    
+    await addMapping(host, finalUrl);
 });
 
 shortcutHostInput.addEventListener('input', (e) => {
     console.log('Updating host hint');
     updateHostHint(e.target.value);
+    updateAddButtonState();
+});
+
+destinationUrlInput.addEventListener('input', () => {
+    updateAddButtonState();
 });
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         loadMappingsData();
         checkPendingUrl();
+        updateAddButtonState();
     });
 } else {
     loadMappingsData();
     checkPendingUrl();
+    updateAddButtonState();
 }

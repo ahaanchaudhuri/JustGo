@@ -11,58 +11,46 @@
     <div class="container">
         <div class="header">
             <img src="../icons/logo128.png" alt="JustGo Logo" class="logo">
-            <h1>JustGo Shortcuts</h1>
-            <p>Quick access to your shortcuts</p>
+            <h1>JustGo</h1>
+            <p>Quick shortcuts to your favorite sites</p>
         </div>
         <div class="content">
             <div id="message" class="message"></div>
             
             <div class="add-form">
                 <form id="addForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="shortcutHost">Shortcut Host</label>
-                            <input 
-                                type="text" 
-                                id="shortcutHost" 
-                                placeholder="e.g., frontend.dev, docs" 
-                                required
-                            >
-                            <div class="form-hint" id="hostHint"></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="destinationUrl">Destination URL</label>
-                            <input 
-                                type="text" 
-                                id="destinationUrl" 
-                                placeholder="http://localhost:5173/" 
-                                required
-                            >
-                            <div class="form-hint">Protocol added automatically if missing</div>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Add Shortcut</button>
+                    <div class="form-group">
+                        <label for="shortcutHost">Shortcut Name</label>
+                        <input 
+                            type="text" 
+                            id="shortcutHost" 
+                            placeholder="e.g. YouTube"
+                            required
+                            aria-required="true"
+                        >
+                        <div class="form-hint" id="hostHint"></div>
                     </div>
+                    <div class="form-group">
+                        <label for="destinationUrl">Destination URL</label>
+                        <input 
+                            type="text" 
+                            id="destinationUrl" 
+                            placeholder="e.g. https://youtube.com"
+                            required
+                            aria-required="true"
+                        >
+                        <div class="form-hint">Protocol will be added automatically if missing</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="addBtn">Add Shortcut</button>
                 </form>
             </div>
 
             <div class="mappings-section">
-                <h2>Your Shortcuts</h2>
+                <h2>My Shortcuts</h2>
                 <div id="mappingsContainer">
-                    <table class="mappings-table" id="mappingsTable" style="display: none;">
-                        <thead>
-                            <tr>
-                                <th>Shortcut</th>
-                                <th>URL</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="mappingsTableBody">
-                        </tbody>
-                    </table>
+                    <div class="shortcuts-list" id="shortcutsList"></div>
                     <div id="emptyState" class="empty-state">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                        </svg>
+                        <div class="empty-state-icon">🔗</div>
                         <p>No shortcuts yet. Add your first shortcut above!</p>
                     </div>
                 </div>
@@ -73,4 +61,3 @@
     <script src="../js/sidepanel.js"></script>
 </body>
 </html>
-

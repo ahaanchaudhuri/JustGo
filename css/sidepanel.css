@@ -1,16 +1,22 @@
 body {
     padding: 0;
+    background: linear-gradient(135deg, #F5F7FA 0%, #E8ECF1 100%);
 }
 
 .container {
     max-width: 100%;
     border-radius: 0;
     box-shadow: none;
+    border: none;
     min-height: 100vh;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
 }
 
 .header {
-    padding: 20px;
+    padding: 28px 24px 24px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 100%);
 }
 
 .header .logo {
@@ -20,72 +26,43 @@ body {
 }
 
 .header h1 {
-    font-size: 20px;
+    font-size: 24px;
     margin-bottom: 4px;
 }
 
 .header p {
-    font-size: 12px;
-}
-
-.content {
-    padding: 20px;
-}
-
-.add-form {
-    margin-bottom: 24px;
-    padding: 16px;
-}
-
-.form-row {
-    grid-template-columns: 1fr;
-    gap: 12px;
-}
-
-.form-row .btn-primary {
-    width: 100%;
-}
-
-.mappings-section h2 {
-    font-size: 16px;
-    margin-bottom: 16px;
-}
-
-.mappings-table {
-    font-size: 13px;
-}
-
-.mappings-table th,
-.mappings-table td {
-    padding: 12px;
-    font-size: 13px;
-}
-
-.mappings-table th:first-child,
-.mappings-table td:first-child {
-    max-width: 120px;
-}
-
-.mappings-table th:nth-child(2),
-.mappings-table td:nth-child(2) {
-    max-width: 0;
-}
-
-.btn-delete {
-    padding: 6px 12px;
-    font-size: 11px;
-}
-
-.empty-state {
-    padding: 40px 20px;
-}
-
-.empty-state svg {
-    width: 48px;
-    height: 48px;
-}
-
-.empty-state p {
     font-size: 14px;
 }
 
+.content {
+    padding: 24px;
+}
+
+.shortcut-card {
+    padding: 14px 16px;
+}
+
+.shortcut-name {
+    font-size: 15px;
+}
+
+.shortcut-url {
+    font-size: 12px;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(135deg, #0A0A0B 0%, #1C1C1E 100%);
+    }
+
+    .container {
+        background: rgba(28, 28, 30, 0.95);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+    }
+
+    .header {
+        background: linear-gradient(180deg, rgba(28, 28, 30, 0.5) 0%, rgba(28, 28, 30, 0) 100%);
+    }
+}
