@@ -20,7 +20,7 @@
         "*://*/*"
     ],
     "background": {
-        "service_worker": "background.js"
+        "service_worker": "js/background.js"
     },
     "commands": {
         "open-sidepanel": {
@@ -30,9 +30,9 @@
             "description": "Open JustGo side panel"
         }
     },
-    "options_page": "options.html",
+    "options_page": "html/options.html",
     
     "side_panel": {
-        "default_path": "sidepanel.html"
+        "default_path": "html/sidepanel.html"
     }
 }

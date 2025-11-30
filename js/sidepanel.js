@@ -41,10 +41,12 @@ async function loadMappingsData() {
         mappings = await loadMappings();
         renderMappings();
         await rebuildDNRRules(mappings);
+        await prefillCurrentUrl();
     } catch (error) {
         console.error('Error loading mappings:', error);
         mappings = {};
         renderMappings();
+        await prefillCurrentUrl();
     }
 }
 
@@ -140,6 +142,34 @@ function checkPendingUrl() {
             console.log('No pending URL found');
         }
     });
+}
+
+async function getCurrentTabUrl() {
+    return new Promise((resolve) => {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (tabs && tabs.length > 0) {
+                const url = tabs[0].url;
+                // Only return URLs for regular web pages
+                if (url && !url.startsWith('chrome://') && !url.startsWith('chrome-extension://')) {
+                    resolve(url);
+                } else {
+                    resolve(null);
+                }
+            } else {
+                resolve(null);
+            }
+        });
+    });
+}
+
+async function prefillCurrentUrl() {
+    const url = await getCurrentTabUrl();
+    if (url && destinationUrlInput) {
+        destinationUrlInput.value = url;
+        if (shortcutHostInput) {
+            shortcutHostInput.focus();
+        }
+    }
 }
 
 chrome.storage.onChanged.addListener((changes, areaName) => {

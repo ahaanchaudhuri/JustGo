@@ -3,24 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JustGo - URL Shortcuts Settings</title>
-    <link rel="stylesheet" href="options.css">
+    <title>JustGo - Shortcuts</title>
+    <link rel="stylesheet" href="../css/options.css">
+    <link rel="stylesheet" href="../css/sidepanel.css">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <img src="icons/logo128.png" alt="JustGo Logo" class="logo">
-            <h1>JustGo URL Shortcuts</h1>
-            <p>Manage your custom URL shortcuts</p>
+            <img src="../icons/logo128.png" alt="JustGo Logo" class="logo">
+            <h1>JustGo Shortcuts</h1>
+            <p>Quick access to your shortcuts</p>
         </div>
         <div class="content">
             <div id="message" class="message"></div>
-            
-            <div class="toolbar">
-                <button class="btn btn-secondary" id="exportBtn">Export JSON</button>
-                <button class="btn btn-secondary" id="importBtn">Import JSON</button>
-                <input type="file" id="fileInput" accept=".json">
-            </div>
             
             <div class="add-form">
                 <form id="addForm">
@@ -40,10 +35,10 @@
                             <input 
                                 type="text" 
                                 id="destinationUrl" 
-                                placeholder="http://localhost:5173/ or https://docs.google.com/" 
+                                placeholder="http://localhost:5173/" 
                                 required
                             >
-                            <div class="form-hint">Protocol will be added automatically if missing</div>
+                            <div class="form-hint">Protocol added automatically if missing</div>
                         </div>
                         <button type="submit" class="btn btn-primary">Add Shortcut</button>
                     </div>
@@ -56,8 +51,8 @@
                     <table class="mappings-table" id="mappingsTable" style="display: none;">
                         <thead>
                             <tr>
-                                <th>Shortcut Host</th>
-                                <th>Destination URL</th>
+                                <th>Shortcut</th>
+                                <th>URL</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -74,7 +69,8 @@
             </div>
         </div>
     </div>
-    <script src="utils.js"></script>
-    <script src="options.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/sidepanel.js"></script>
 </body>
 </html>
+
