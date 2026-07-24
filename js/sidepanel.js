@@ -1,5 +1,4 @@
 // Sidepanel functionality
-console.log('sidepanel.js loaded');
 let mappings = {};
 
 const addForm = document.getElementById('addForm');
@@ -15,6 +14,21 @@ function showMessage(text, type) {
     messageDiv.textContent = text;
     messageDiv.className = `message ${type}`;
     setTimeout(() => { messageDiv.className = 'message'; }, 3000);
+}
+
+// After a save, teach the user exactly how to invoke the shortcut
+function showUsageHint(host) {
+    messageDiv.textContent = '';
+    const intro = document.createTextNode('Saved! Type ');
+    const kbd1 = document.createElement('kbd');
+    kbd1.textContent = `${host}/`;
+    const middle = document.createTextNode(' or ');
+    const kbd2 = document.createElement('kbd');
+    kbd2.textContent = `go ${host}`;
+    const outro = document.createTextNode(' in the address bar.');
+    messageDiv.append(intro, kbd1, middle, kbd2, outro);
+    messageDiv.className = 'message success';
+    setTimeout(() => { messageDiv.className = 'message'; }, 6000);
 }
 
 function updateHostHint(host) {
@@ -39,15 +53,12 @@ function updateHostHint(host) {
 async function loadMappingsData() {
     try {
         mappings = await loadMappings();
-        renderMappings();
-        await rebuildDNRRules(mappings);
-        await prefillCurrentUrl();
     } catch (error) {
         console.error('Error loading mappings:', error);
         mappings = {};
-        renderMappings();
-        await prefillCurrentUrl();
     }
+    renderMappings();
+    await prefillCurrentUrl();
 }
 
 function renderMappings() {
@@ -63,55 +74,55 @@ function renderMappings() {
     hosts.forEach(host => {
         const url = mappings[host];
         const displayHost = host.includes('.') ? host : host + '/';
-        
+
         const card = document.createElement('div');
         card.className = 'shortcut-card';
-        
+
         const content = document.createElement('div');
         content.className = 'shortcut-card-content';
-        
+
         const icon = document.createElement('div');
         icon.className = 'shortcut-icon';
         icon.textContent = '🔗';
         icon.setAttribute('aria-hidden', 'true');
-        
+
         const info = document.createElement('div');
         info.className = 'shortcut-info';
-        
+
         const name = document.createElement('div');
         name.className = 'shortcut-name';
-        name.textContent = escapeHtml(displayHost);
-        
+        name.textContent = displayHost;
+
         const urlContainer = document.createElement('div');
         urlContainer.className = 'shortcut-url';
-        
+
         const urlLink = document.createElement('a');
-        urlLink.href = escapeHtml(url);
+        urlLink.href = url;
         urlLink.target = '_blank';
         urlLink.rel = 'noopener noreferrer';
         urlLink.className = 'shortcut-url-link';
-        urlLink.textContent = escapeHtml(url);
-        urlLink.title = escapeHtml(url);
-        
+        urlLink.textContent = url;
+        urlLink.title = url;
+
         urlContainer.appendChild(urlLink);
         info.appendChild(name);
         info.appendChild(urlContainer);
         content.appendChild(icon);
         content.appendChild(info);
-        
+
         const actions = document.createElement('div');
         actions.className = 'shortcut-actions';
-        
+
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'btn-delete';
-        deleteBtn.setAttribute('data-host', escapeHtml(host));
-        deleteBtn.setAttribute('aria-label', `Delete shortcut ${escapeHtml(displayHost)}`);
+        deleteBtn.setAttribute('data-host', host);
+        deleteBtn.setAttribute('aria-label', `Delete shortcut ${displayHost}`);
         deleteBtn.setAttribute('title', 'Delete shortcut');
         deleteBtn.textContent = '🗑';
         deleteBtn.addEventListener('click', () => {
             deleteMapping(host);
         });
-        
+
         actions.appendChild(deleteBtn);
         card.appendChild(content);
         card.appendChild(actions);
@@ -125,7 +136,6 @@ async function deleteMapping(host) {
         delete mappings[host];
         try {
             await saveMappings(mappings);
-            await rebuildDNRRules(mappings);
             renderMappings();
             showMessage('Shortcut deleted successfully!', 'success');
         } catch (error) {
@@ -150,9 +160,8 @@ async function addMapping(host, url) {
     mappings[normalizedHost] = normalizedUrl;
     try {
         await saveMappings(mappings);
-        await rebuildDNRRules(mappings);
         renderMappings();
-        showMessage('Shortcut added successfully!', 'success');
+        showUsageHint(normalizedHost);
         shortcutHostInput.value = '';
         destinationUrlInput.value = '';
         hostHint.textContent = '';
@@ -167,16 +176,33 @@ async function addMapping(host, url) {
     }
 }
 
+// Prefill a suggested name for the given URL. Auto-suggestions are kept
+// selected so typing replaces them; user-typed text is never overwritten.
+let lastSuggestedName = '';
+function applySuggestedName(url) {
+    const current = shortcutHostInput.value.trim();
+    if (current && current !== lastSuggestedName) {
+        return;
+    }
+    const suggestion = suggestShortcutName(url);
+    if (!suggestion || mappings[suggestion]) {
+        return;
+    }
+    shortcutHostInput.value = suggestion;
+    lastSuggestedName = suggestion;
+    updateHostHint(suggestion);
+    updateAddButtonState();
+    shortcutHostInput.focus();
+    shortcutHostInput.select();
+}
+
 function checkPendingUrl() {
-    console.log('Checking for pending URL');
     chrome.storage.local.get(['pendingDestinationUrl'], (result) => {
-        console.log('Pending URL result:', result);
         if (result.pendingDestinationUrl) {
             destinationUrlInput.value = result.pendingDestinationUrl;
-            console.log('Pending URL set:', result.pendingDestinationUrl);
+            applySuggestedName(result.pendingDestinationUrl);
+            updateAddButtonState();
             chrome.storage.local.remove('pendingDestinationUrl');
-        } else {
-            console.log('No pending URL found');
         }
     });
 }
@@ -203,6 +229,8 @@ async function prefillCurrentUrl() {
     const url = await getCurrentTabUrl();
     if (url && destinationUrlInput) {
         destinationUrlInput.value = url;
+        applySuggestedName(url);
+        updateAddButtonState();
         if (shortcutHostInput) {
             shortcutHostInput.focus();
         }
@@ -211,8 +239,19 @@ async function prefillCurrentUrl() {
 
 chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === 'local' && changes.pendingDestinationUrl) {
-        destinationUrlInput.value = changes.pendingDestinationUrl.newValue || '';
-        chrome.storage.local.remove('pendingDestinationUrl');
+        const url = changes.pendingDestinationUrl.newValue;
+        // Ignore the removal event fired by our own cleanup below
+        if (url) {
+            destinationUrlInput.value = url;
+            applySuggestedName(url);
+            updateAddButtonState();
+            chrome.storage.local.remove('pendingDestinationUrl');
+        }
+    }
+    // Stay in sync when shortcuts change elsewhere (options page, another machine)
+    if (areaName === 'sync' && changes.mappings) {
+        mappings = changes.mappings.newValue || {};
+        renderMappings();
     }
 });
 
@@ -223,7 +262,6 @@ function updateAddButtonState() {
 }
 
 addForm.addEventListener('submit', async (e) => {
-    console.log('Form submitted');
     e.preventDefault();
     const host = shortcutHostInput.value.trim();
     const url = destinationUrlInput.value.trim();
@@ -231,18 +269,17 @@ addForm.addEventListener('submit', async (e) => {
         showMessage('Please fill in both fields', 'error');
         return;
     }
-    
+
     // Validate URL format
     let finalUrl = url;
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
         finalUrl = 'https://' + url;
     }
-    
+
     await addMapping(host, finalUrl);
 });
 
 shortcutHostInput.addEventListener('input', (e) => {
-    console.log('Updating host hint');
     updateHostHint(e.target.value);
     updateAddButtonState();
 });

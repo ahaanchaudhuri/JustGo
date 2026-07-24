@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to JustGo</title>
+
+    <link rel="stylesheet" href="../css/options.css">
+    <link rel="stylesheet" href="../css/onboarding.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="../icons/logo128.jpeg" alt="JustGo Logo" class="logo logo-light">
+            <img src="../icons/logo_dark128.jpeg" alt="JustGo Logo" class="logo logo-dark">
+            <h1>Welcome to JustGo</h1>
+            <p>Type a name in the address bar, land on the page.</p>
+        </div>
+        <div class="content">
+            <div id="message" class="message"></div>
+
+            <!-- Step 1: create the first shortcut -->
+            <div id="stepCreate" class="onboarding-step">
+                <div class="step-label">Step 1 of 2</div>
+                <h2>Create your first shortcut</h2>
+                <p class="step-description">
+                    We've filled one in for you — change it to anything you like, then save it.
+                </p>
+                <div class="add-form">
+                    <form id="addForm">
+                        <div class="form-group">
+                            <label for="shortcutHost">Shortcut Name</label>
+                            <input
+                                type="text"
+                                id="shortcutHost"
+                                value="yt"
+                                required
+                                aria-required="true"
+                            >
+                            <div class="form-hint">Keep it short — you'll type this in the address bar</div>
+                            <div class="form-hint" id="hostHint"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="destinationUrl">Destination URL</label>
+                            <input
+                                type="text"
+                                id="destinationUrl"
+                                value="https://youtube.com"
+                                required
+                                aria-required="true"
+                            >
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="addBtn">Save Shortcut</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Step 2: try it -->
+            <div id="stepTry" class="onboarding-step" hidden>
+                <div class="step-label">Step 2 of 2</div>
+                <h2>Now try it</h2>
+                <p class="step-description">
+                    Click your address bar and use your shortcut either way:
+                </p>
+
+                <div class="try-card">
+                    <div class="try-card-title">The fast way</div>
+                    <div class="try-card-demo">
+                        <kbd id="demoSlash">yt/</kbd>
+                        <span class="try-card-then">then</span>
+                        <kbd>Enter</kbd>
+                    </div>
+                    <p class="try-card-note">
+                        The trailing <strong>/</strong> matters the first time — it tells Chrome
+                        this is an address, not a search. After that, Chrome remembers.
+                    </p>
+                </div>
+
+                <div class="try-card">
+                    <div class="try-card-title">The guided way</div>
+                    <div class="try-card-demo">
+                        <kbd>go</kbd>
+                        <span class="try-card-then">then</span>
+                        <kbd>Tab</kbd>
+                        <span class="try-card-then">then</span>
+                        <kbd id="demoOmnibox">yt</kbd>
+                    </div>
+                    <p class="try-card-note">
+                        Type <strong>go</strong> and press Tab to search all your shortcuts with
+                        suggestions as you type.
+                    </p>
+                </div>
+
+                <div class="try-card try-card-secondary">
+                    <div class="try-card-title">Managing shortcuts</div>
+                    <p class="try-card-note">
+                        Press <kbd>Ctrl</kbd>+<kbd>.</kbd> or click the JustGo toolbar icon to open
+                        the side panel — it pre-fills whatever page you're on, so saving a new
+                        shortcut takes seconds.
+                    </p>
+                </div>
+
+                <button class="btn btn-primary" id="doneBtn">Done — start using JustGo</button>
+            </div>
+        </div>
+    </div>
+    <script src="../js/utils.js"></script>
+    <script src="../js/onboarding.js"></script>
+</body>
+</html>

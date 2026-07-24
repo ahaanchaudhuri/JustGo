@@ -9,7 +9,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="../icons/logo128.png" alt="JustGo Logo" class="logo">
+            <img src="../icons/logo128.jpeg" alt="JustGo Logo" class="logo logo-light">
+            <img src="../icons/logo_dark128.jpeg" alt="JustGo Logo" class="logo logo-dark">
             <h1>JustGo</h1>
             <p>Quick shortcuts to your favorite sites</p>
         </div>
@@ -26,13 +27,14 @@
                 <form id="addForm">
                     <div class="form-group">
                         <label for="shortcutHost">Shortcut Name</label>
-                        <input 
-                            type="text" 
-                            id="shortcutHost" 
-                            placeholder="e.g. YouTube"
+                        <input
+                            type="text"
+                            id="shortcutHost"
+                            placeholder="e.g. yt"
                             required
                             aria-required="true"
                         >
+                        <div class="form-hint">Keep it short — you'll type this in the address bar</div>
                         <div class="form-hint" id="hostHint"></div>
                     </div>
                     <div class="form-group">

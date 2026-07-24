@@ -9,20 +9,26 @@ JustGo is a Chrome extension that lets you define your own shortcut keywords for
 ## How It Works
 
 1. Open the side panel (`Ctrl+.` or click the extension icon)
-2. Add a shortcut — give it a name and a destination URL
-3. Type the shortcut name in Chrome's address bar and go
+2. Add a shortcut — give it a short name and a destination URL
+3. Use it from the address bar, two ways:
+   - **Fast way:** type `yt/` (the trailing `/` tells Chrome it's an address, not a search — after the first time, Chrome remembers)
+   - **Guided way:** type `go`, press `Tab`, then start typing — fuzzy-matched suggestions from your shortcuts appear as you type
 
-Your shortcuts are stored locally and always available.
+Your shortcuts are stored locally and sync across your Chrome profiles.
 
 ---
 
 ## Features
 
 - **Instant navigation** — type a shortcut name in the address bar to jump to any URL
-- **Side panel UI** — manage shortcuts without leaving your current tab (`Ctrl+.`)
+- **Omnibox integration** — `go` + `Tab` searches your shortcuts with live suggestions
+- **Side panel UI** — manage shortcuts without leaving your current tab (`Ctrl+.` or the toolbar icon)
 - **Smart URL handling** — protocol added automatically if you leave it off
-- **Persistent storage** — shortcuts saved locally via Chrome's storage API
+- **Synced storage** — shortcuts saved via Chrome's sync storage, available on all your machines
 - **Prefill on save** — opens with the current tab's URL pre-filled when adding a new shortcut
+- **Right-click capture** — "create shortcut for this page" (or any link) straight from the context menu
+- **Smart name suggestions** — a short, typeable name is suggested from the URL (`github.com/foo/my-repo` → `my-repo`), pre-selected so typing replaces it
+- **Guided onboarding** — create and use your first shortcut within a minute of installing
 
 ---
 
@@ -41,10 +47,11 @@ JustGo isn't on the Chrome Web Store yet — load it manually:
 ## Usage
 
 ### Add a shortcut
-Open the side panel with `Ctrl+.`, enter a name and URL, hit **Add Shortcut**.
+Open the side panel with `Ctrl+.` (or click the toolbar icon) — the destination is pre-filled with the page you're on and a short name is suggested, so it's usually just Enter to save. You can also right-click any page or link and choose **JustGo: create shortcut**.
 
 ### Use a shortcut
-Type the shortcut name in Chrome's address bar and press Enter.
+- Type the shortcut name with a trailing slash (`yt/`) in the address bar and press Enter, or
+- Type `go`, press `Tab`, pick a suggestion, press Enter.
 
 ### Manage shortcuts
 Open the side panel to view, edit, or delete any of your shortcuts.

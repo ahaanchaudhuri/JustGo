@@ -19,6 +19,21 @@ function showMessage(text, type) {
     setTimeout(() => { messageDiv.className = 'message'; }, 3000);
 }
 
+// After a save, teach the user exactly how to invoke the shortcut
+function showUsageHint(host) {
+    messageDiv.textContent = '';
+    const intro = document.createTextNode('Saved! Type ');
+    const kbd1 = document.createElement('kbd');
+    kbd1.textContent = `${host}/`;
+    const middle = document.createTextNode(' or ');
+    const kbd2 = document.createElement('kbd');
+    kbd2.textContent = `go ${host}`;
+    const outro = document.createTextNode(' in the address bar.');
+    messageDiv.append(intro, kbd1, middle, kbd2, outro);
+    messageDiv.className = 'message success';
+    setTimeout(() => { messageDiv.className = 'message'; }, 6000);
+}
+
 function updateHostHint(host) {
     if (!host) {
         hostHint.textContent = '';
@@ -41,13 +56,11 @@ function updateHostHint(host) {
 async function loadMappingsData() {
     try {
         mappings = await loadMappings();
-        renderMappings();
-        await rebuildDNRRules(mappings);
     } catch (error) {
         console.error('Error loading mappings:', error);
         mappings = {};
-        renderMappings();
     }
+    renderMappings();
 }
 
 function renderMappings() {
@@ -80,18 +93,18 @@ function renderMappings() {
         
         const name = document.createElement('div');
         name.className = 'shortcut-name';
-        name.textContent = escapeHtml(displayHost);
+        name.textContent = displayHost;
         
         const urlContainer = document.createElement('div');
         urlContainer.className = 'shortcut-url';
         
         const urlLink = document.createElement('a');
-        urlLink.href = escapeHtml(url);
+        urlLink.href = url;
         urlLink.target = '_blank';
         urlLink.rel = 'noopener noreferrer';
         urlLink.className = 'shortcut-url-link';
-        urlLink.textContent = escapeHtml(url);
-        urlLink.title = escapeHtml(url);
+        urlLink.textContent = url;
+        urlLink.title = url;
         
         urlContainer.appendChild(urlLink);
         info.appendChild(name);
@@ -104,8 +117,8 @@ function renderMappings() {
         
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'btn-delete';
-        deleteBtn.setAttribute('data-host', escapeHtml(host));
-        deleteBtn.setAttribute('aria-label', `Delete shortcut ${escapeHtml(displayHost)}`);
+        deleteBtn.setAttribute('data-host', host);
+        deleteBtn.setAttribute('aria-label', `Delete shortcut ${displayHost}`);
         deleteBtn.setAttribute('title', 'Delete shortcut');
         deleteBtn.textContent = '🗑';
         deleteBtn.addEventListener('click', () => {
@@ -125,7 +138,6 @@ async function deleteMapping(host) {
         delete mappings[host];
         try {
             await saveMappings(mappings);
-            await rebuildDNRRules(mappings);
             renderMappings();
             showMessage('Shortcut deleted successfully!', 'success');
         } catch (error) {
@@ -150,9 +162,8 @@ async function addMapping(host, url) {
     mappings[normalizedHost] = normalizedUrl;
     try {
         await saveMappings(mappings);
-        await rebuildDNRRules(mappings);
         renderMappings();
-        showMessage('Shortcut added successfully!', 'success');
+        showUsageHint(normalizedHost);
         shortcutHostInput.value = '';
         destinationUrlInput.value = '';
         hostHint.textContent = '';
@@ -198,7 +209,6 @@ async function importMappings(file) {
                 }
                 mappings = normalizedMappings;
                 await saveMappings(mappings);
-                await rebuildDNRRules(mappings);
                 renderMappings();
                 showMessage('Mappings imported successfully!', 'success');
                 resolve();

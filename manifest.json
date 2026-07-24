@@ -4,13 +4,14 @@
     "version": "1.0",
     "description": "A simple extension that lets you create your own custom URL shortcuts.",
     "icons": {
-        "16": "icons/logo64.png",
-        "48": "icons/logo128.png",
-        "128": "icons/logo128.png",
-        "256": "icons/logo256.png",
-        "512": "icons/logo512.png"
+        "16": "icons/logo64.jpeg",
+        "48": "icons/logo128.jpeg",
+        "128": "icons/logo128.jpeg",
+        "256": "icons/logo256.jpeg",
+        "512": "icons/logo512.jpeg"
     },
     "permissions": [
+        "contextMenus",
         "declarativeNetRequest",
         "storage",
         "sidePanel",
@@ -22,6 +23,17 @@
     "background": {
         "service_worker": "js/background.js"
     },
+    "action": {
+        "default_title": "JustGo — manage shortcuts",
+        "default_icon": {
+            "16": "icons/logo64.jpeg",
+            "48": "icons/logo128.jpeg",
+            "128": "icons/logo128.jpeg"
+        }
+    },
+    "omnibox": {
+        "keyword": "go"
+    },
     "commands": {
         "open-sidepanel": {
             "suggested_key": {
@@ -31,7 +43,7 @@
         }
     },
     "options_page": "html/options.html",
-    
+
     "side_panel": {
         "default_path": "html/sidepanel.html"
     }

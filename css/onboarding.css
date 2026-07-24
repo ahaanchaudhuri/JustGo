@@ -1,0 +1,134 @@
+.onboarding-step {
+    animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.step-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #007AFF;
+    margin-bottom: 8px;
+}
+
+.onboarding-step h2 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    color: #1D1D1F;
+    margin-bottom: 8px;
+}
+
+.step-description {
+    font-size: 15px;
+    color: #86868B;
+    letter-spacing: -0.2px;
+    margin-bottom: 24px;
+}
+
+.try-card {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.try-card-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    color: #86868B;
+    margin-bottom: 12px;
+}
+
+.try-card-demo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.try-card-demo kbd,
+.try-card-note kbd {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-family: 'SF Mono', ui-monospace, Menlo, monospace;
+    font-size: 15px;
+    font-weight: 600;
+    background: rgba(245, 245, 247, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
+    color: #1D1D1F;
+}
+
+.try-card-note kbd {
+    padding: 2px 8px;
+    font-size: 12px;
+}
+
+.try-card-then {
+    font-size: 13px;
+    color: #86868B;
+}
+
+.try-card-note {
+    font-size: 14px;
+    color: #6E6E73;
+    letter-spacing: -0.1px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.try-card-secondary {
+    background: rgba(245, 245, 247, 0.6);
+}
+
+#doneBtn {
+    margin-top: 12px;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+    .step-label {
+        color: #0A84FF;
+    }
+
+    .onboarding-step h2 {
+        color: #F5F5F7;
+    }
+
+    .step-description {
+        color: #98989D;
+    }
+
+    .try-card {
+        background: rgba(44, 44, 46, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .try-card-title {
+        color: #98989D;
+    }
+
+    .try-card-demo kbd,
+    .try-card-note kbd {
+        background: rgba(28, 28, 30, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+        color: #F5F5F7;
+    }
+
+    .try-card-note {
+        color: #98989D;
+    }
+
+    .try-card-secondary {
+        background: rgba(28, 28, 30, 0.6);
+    }
+}

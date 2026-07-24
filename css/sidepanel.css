@@ -15,23 +15,22 @@ body {
 }
 
 .header {
-    padding: 28px 24px 24px;
+    padding: 24px 24px 20px;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 100%);
-}
-
-.header .logo {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .header h1 {
-    font-size: 24px;
-    margin-bottom: 4px;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.4px;
+    color: #1D1D1F;
+    margin: 0;
+    text-align: left;
 }
 
 .header p {
-    font-size: 14px;
+    display: none;
 }
 
 .content {
@@ -64,5 +63,10 @@ body {
 
     .header {
         background: linear-gradient(180deg, rgba(28, 28, 30, 0.5) 0%, rgba(28, 28, 30, 0) 100%);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .header h1 {
+        color: #F5F5F7;
     }
 }
