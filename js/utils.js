@@ -17,8 +17,15 @@ function normalizeDestinationUrl(url) {
     if (!url.match(/^[a-zA-Z][a-zA-Z\d+\-.]*:/)) {
         url = 'https://' + url;
     }
-    if (!url.endsWith('/')) {
-        url += '/';
+    // Only add a trailing slash to bare origins — never to URLs with a
+    // path, query, or fragment (it would corrupt them, e.g. "?q=%s/")
+    try {
+        const parsed = new URL(url);
+        if (parsed.pathname === '/' && !parsed.search && !parsed.hash && !url.endsWith('/')) {
+            url += '/';
+        }
+    } catch {
+        // Leave unparseable values as-is; DNR simply won't match them
     }
     return url;
 }
@@ -35,11 +42,29 @@ function validateShortcutHost(host) {
     return { valid: true, normalized };
 }
 
-// Convert mappings to DeclarativeNetRequest rules
+// Convert mappings to DeclarativeNetRequest rules.
+// Destinations containing %s become regex rules so the address-bar path
+// fills the parameter: "gh/claude" -> "github.com/search?q=claude".
 function buildDNRRules(mappings) {
     const rules = [];
     let ruleId = 1;
     Object.entries(mappings).forEach(([shortcutHost, destinationUrl]) => {
+        if (destinationUrl.includes('%s')) {
+            const escapedHost = shortcutHost.replace(/\./g, '\\.');
+            rules.push({
+                id: ruleId++,
+                priority: 1,
+                action: {
+                    type: 'redirect',
+                    redirect: { regexSubstitution: destinationUrl.replace(/%s/g, '\\1') }
+                },
+                condition: {
+                    regexFilter: `^https?://(?:www\\.)?${escapedHost}/(.*)`,
+                    resourceTypes: ['main_frame']
+                }
+            });
+            return;
+        }
         rules.push({
             id: ruleId++,
             priority: 1,

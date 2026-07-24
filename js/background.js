@@ -87,14 +87,28 @@ chrome.omnibox.setDefaultSuggestion({
     description: 'JustGo — type a shortcut name to jump to it'
 });
 
+// Split omnibox input into a shortcut query and optional %s arguments
+function parseOmniboxInput(text) {
+    const parts = text.trim().split(/\s+/);
+    return { query: (parts[0] || '').toLowerCase(), args: parts.slice(1).join(' ') };
+}
+
+function fillParams(destination, args) {
+    return destination.replace(/%s/g, encodeURIComponent(args));
+}
+
 chrome.omnibox.onInputChanged.addListener(async (text, suggest) => {
     try {
         const mappings = await loadMappings();
-        const ranked = rankShortcuts(text, mappings);
-        suggest(ranked.slice(0, 8).map(({ host, url }) => ({
-            content: host,
-            description: `${escapeXml(host)} <dim>—</dim> <url>${escapeXml(url)}</url>`
-        })));
+        const { query, args } = parseOmniboxInput(text);
+        const ranked = rankShortcuts(query, mappings);
+        suggest(ranked.slice(0, 8).map(({ host, url }) => {
+            const preview = url.includes('%s') && args ? fillParams(url, args) : url;
+            return {
+                content: args ? `${host} ${args}` : host,
+                description: `${escapeXml(host)} <dim>—</dim> <url>${escapeXml(preview)}</url>`
+            };
+        }));
     } catch (error) {
         console.error('Error building omnibox suggestions:', error);
     }
@@ -118,7 +132,7 @@ chrome.omnibox.onInputEntered.addListener(async (text, disposition) => {
     let destination;
     try {
         const mappings = await loadMappings();
-        const query = text.trim().toLowerCase();
+        const { query, args } = parseOmniboxInput(text);
         if (mappings[query]) {
             matchedHost = query;
         } else {
@@ -129,6 +143,9 @@ chrome.omnibox.onInputEntered.addListener(async (text, disposition) => {
         }
         if (matchedHost) {
             destination = mappings[matchedHost];
+            if (destination.includes('%s')) {
+                destination = fillParams(destination, args);
+            }
             recordUsage(matchedHost);
         }
     } catch (error) {
