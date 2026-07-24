@@ -84,7 +84,7 @@ function escapeXml(text) {
 }
 
 chrome.omnibox.setDefaultSuggestion({
-    description: 'JustGo — type a shortcut name to jump to it'
+    description: 'JustGo — type a shortcut name to jump, or "add &lt;name&gt;" to save this page'
 });
 
 // Split omnibox input into a shortcut query and optional %s arguments
@@ -97,7 +97,33 @@ function fillParams(destination, args) {
     return destination.replace(/%s/g, encodeURIComponent(args));
 }
 
+// "add <name>" quick-captures the current tab's URL under that name
+const ADD_COMMAND_PATTERN = /^add\s+(\S+)\s*$/i;
+function parseAddCommand(text) {
+    const match = text.trim().match(ADD_COMMAND_PATTERN);
+    return match ? match[1] : null;
+}
+
 chrome.omnibox.onInputChanged.addListener(async (text, suggest) => {
+    const addName = parseAddCommand(text);
+    if (addName) {
+        try {
+            const validation = validateShortcutHost(addName);
+            if (!validation.valid) {
+                suggest([{ content: text, description: `<match>Can't save</match> — ${escapeXml(validation.error)}` }]);
+                return;
+            }
+            const mappings = await loadMappings();
+            const existing = mappings[validation.normalized];
+            const description = existing
+                ? `<match>Overwrite</match> "${escapeXml(validation.normalized)}" <dim>— currently points to ${escapeXml(existing)}</dim>`
+                : `<match>Save this page</match> as "${escapeXml(validation.normalized)}"`;
+            suggest([{ content: text, description }]);
+        } catch (error) {
+            console.error('Error building add-command suggestion:', error);
+        }
+        return;
+    }
     try {
         const mappings = await loadMappings();
         const { query, args } = parseOmniboxInput(text);
@@ -114,6 +140,38 @@ chrome.omnibox.onInputChanged.addListener(async (text, suggest) => {
     }
 });
 
+// Brief badge flash on the toolbar icon as feedback for the "add" command,
+// since it deliberately doesn't navigate anywhere.
+let badgeClearTimer;
+function flashBadge(text, color) {
+    chrome.action.setBadgeText({ text });
+    chrome.action.setBadgeBackgroundColor({ color });
+    clearTimeout(badgeClearTimer);
+    badgeClearTimer = setTimeout(() => chrome.action.setBadgeText({ text: '' }), 1800);
+}
+
+async function handleQuickAdd(nameRaw) {
+    const validation = validateShortcutHost(nameRaw);
+    if (!validation.valid) {
+        flashBadge('!', '#DC2626');
+        return;
+    }
+    try {
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (!tab || !tab.url || tab.url.startsWith('chrome://') || tab.url.startsWith('chrome-extension://')) {
+            flashBadge('!', '#DC2626');
+            return;
+        }
+        const mappings = await loadMappings();
+        const normalizedUrl = normalizeDestinationUrl(tab.url);
+        await saveMappings({ ...mappings, [validation.normalized]: normalizedUrl });
+        flashBadge('✓', '#059669');
+    } catch (error) {
+        console.error('Error quick-adding shortcut:', error);
+        flashBadge('!', '#DC2626');
+    }
+}
+
 // Track how often each shortcut is used so the manager can sort by frecency
 function recordUsage(host) {
     chrome.storage.local.get(['usage'], (result) => {
@@ -128,6 +186,12 @@ function recordUsage(host) {
 }
 
 chrome.omnibox.onInputEntered.addListener(async (text, disposition) => {
+    const addName = parseAddCommand(text);
+    if (addName) {
+        // No navigation on purpose — the whole point is staying on this page
+        await handleQuickAdd(addName);
+        return;
+    }
     let matchedHost;
     let destination;
     try {

@@ -22,6 +22,7 @@ Your shortcuts are stored locally and sync across your Chrome profiles.
 
 - **Instant navigation** — type a shortcut name in the address bar to jump to any URL
 - **Omnibox integration** — `go` + `Tab` searches your shortcuts with live suggestions
+- **Quick capture from the address bar** — `go add <name>` saves the page you're currently on under that name, no panel required (a badge flash on the toolbar icon confirms it)
 - **Parameterized shortcuts** — put `%s` in a destination (`github.com/search?q=%s`) and pass arguments: `go gh claude` or `gh/claude`
 - **Edit, search, and smart ordering** — edit shortcuts in place, filter with fuzzy search, most-used shortcuts float to the top
 - **Side panel UI** — manage shortcuts without leaving your current tab (`Ctrl+.` or the toolbar icon)
