@@ -2,6 +2,9 @@
 // Requires utils.js loaded first and the standard manager DOM ids present.
 const ShortcutUI = (() => {
     let mappings = {};
+    let usage = {};
+    let searchQuery = '';
+    let editingHost = null;
     let lastSuggestedName = '';
     const el = {};
 
@@ -14,6 +17,7 @@ const ShortcutUI = (() => {
         el.message = document.getElementById('message');
         el.hostHint = document.getElementById('hostHint');
         el.addBtn = document.getElementById('addBtn');
+        el.searchInput = document.getElementById('searchInput');
     }
 
     function showMessage(text, type) {
@@ -66,18 +70,43 @@ const ShortcutUI = (() => {
         return host.includes('.') ? host : host + '/';
     }
 
+    // Most-used first, then most recent, then alphabetical.
+    // When searching, relevance (rankShortcuts) takes over.
+    function orderedHosts() {
+        if (searchQuery) {
+            return rankShortcuts(searchQuery, mappings).map(entry => entry.host);
+        }
+        return Object.keys(mappings).sort((a, b) => {
+            const ua = usage[a] || { count: 0, last: 0 };
+            const ub = usage[b] || { count: 0, last: 0 };
+            return ub.count - ua.count || ub.last - ua.last || a.localeCompare(b);
+        });
+    }
+
     function renderMappings() {
-        const hosts = Object.keys(mappings);
+        if (el.searchInput) {
+            el.searchInput.style.display = Object.keys(mappings).length > 0 ? '' : 'none';
+        }
+        const hosts = orderedHosts();
         if (hosts.length === 0) {
             el.shortcutsList.style.display = 'none';
             el.emptyState.style.display = 'block';
+            const emptyText = el.emptyState.querySelector('p');
+            if (emptyText) {
+                emptyText.textContent = searchQuery
+                    ? `No shortcuts match "${searchQuery}"`
+                    : 'No shortcuts yet. Add your first shortcut above!';
+            }
             return;
         }
         el.shortcutsList.style.display = 'flex';
         el.emptyState.style.display = 'none';
         el.shortcutsList.innerHTML = '';
         hosts.forEach(host => {
-            el.shortcutsList.appendChild(buildCard(host, mappings[host]));
+            const card = host === editingHost
+                ? buildEditCard(host, mappings[host])
+                : buildCard(host, mappings[host]);
+            el.shortcutsList.appendChild(card);
         });
     }
 
@@ -120,6 +149,16 @@ const ShortcutUI = (() => {
         const actions = document.createElement('div');
         actions.className = 'shortcut-actions';
 
+        const editBtn = document.createElement('button');
+        editBtn.className = 'btn-edit';
+        editBtn.setAttribute('aria-label', `Edit shortcut ${displayName(host)}`);
+        editBtn.setAttribute('title', 'Edit shortcut');
+        editBtn.textContent = '✏️';
+        editBtn.addEventListener('click', () => {
+            editingHost = host;
+            renderMappings();
+        });
+
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'btn-delete';
         deleteBtn.setAttribute('aria-label', `Delete shortcut ${displayName(host)}`);
@@ -127,10 +166,101 @@ const ShortcutUI = (() => {
         deleteBtn.textContent = '🗑';
         deleteBtn.addEventListener('click', () => deleteMapping(host));
 
+        actions.appendChild(editBtn);
         actions.appendChild(deleteBtn);
         card.appendChild(content);
         card.appendChild(actions);
         return card;
+    }
+
+    function buildEditCard(host, url) {
+        const card = document.createElement('div');
+        card.className = 'shortcut-card shortcut-card-editing';
+
+        const form = document.createElement('form');
+        form.className = 'shortcut-edit-form';
+
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.className = 'shortcut-edit-input';
+        nameInput.value = host;
+        nameInput.setAttribute('aria-label', 'Shortcut name');
+
+        const urlInput = document.createElement('input');
+        urlInput.type = 'text';
+        urlInput.className = 'shortcut-edit-input';
+        urlInput.value = url;
+        urlInput.setAttribute('aria-label', 'Destination URL');
+
+        const buttons = document.createElement('div');
+        buttons.className = 'shortcut-edit-buttons';
+
+        const saveBtn = document.createElement('button');
+        saveBtn.type = 'submit';
+        saveBtn.className = 'btn btn-edit-save';
+        saveBtn.textContent = 'Save';
+
+        const cancelBtn = document.createElement('button');
+        cancelBtn.type = 'button';
+        cancelBtn.className = 'btn btn-secondary btn-edit-cancel';
+        cancelBtn.textContent = 'Cancel';
+        cancelBtn.addEventListener('click', () => {
+            editingHost = null;
+            renderMappings();
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await saveEdit(host, nameInput.value, urlInput.value);
+        });
+        form.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                editingHost = null;
+                renderMappings();
+            }
+        });
+
+        buttons.appendChild(saveBtn);
+        buttons.appendChild(cancelBtn);
+        form.appendChild(nameInput);
+        form.appendChild(urlInput);
+        form.appendChild(buttons);
+        card.appendChild(form);
+        setTimeout(() => nameInput.focus(), 0);
+        return card;
+    }
+
+    async function saveEdit(oldHost, newHostRaw, newUrlRaw) {
+        const validation = validateShortcutHost(newHostRaw);
+        if (!validation.valid) {
+            showMessage(validation.error, 'error');
+            return;
+        }
+        const newHost = validation.normalized;
+        const newUrl = normalizeDestinationUrl(newUrlRaw.trim());
+        if (!newUrlRaw.trim()) {
+            showMessage('Destination URL cannot be empty', 'error');
+            return;
+        }
+        if (newHost !== oldHost && mappings[newHost]) {
+            showMessage(`Shortcut "${displayName(newHost)}" already exists!`, 'error');
+            return;
+        }
+        const previous = mappings;
+        const updated = Object.fromEntries(
+            Object.entries(mappings).filter(([key]) => key !== oldHost)
+        );
+        updated[newHost] = newUrl;
+        mappings = updated;
+        try {
+            await saveMappings(mappings);
+            editingHost = null;
+            renderMappings();
+            showMessage('Shortcut updated!', 'success');
+        } catch (error) {
+            mappings = previous;
+            showMessage('Error updating shortcut: ' + error.message, 'error');
+        }
     }
 
     async function deleteMapping(host) {
@@ -240,12 +370,33 @@ const ShortcutUI = (() => {
             updateAddButtonState();
         });
         el.destinationUrl.addEventListener('input', updateAddButtonState);
+        if (el.searchInput) {
+            el.searchInput.addEventListener('input', (e) => {
+                searchQuery = e.target.value.trim();
+                renderMappings();
+            });
+        }
         chrome.storage.onChanged.addListener((changes, areaName) => {
             // Stay in sync when shortcuts change elsewhere (other page, another machine)
             if (areaName === 'sync' && changes.mappings) {
                 mappings = changes.mappings.newValue || {};
                 renderMappings();
             }
+            // Re-sort when the omnibox records a use
+            if (areaName === 'local' && changes.usage) {
+                usage = changes.usage.newValue || {};
+                if (!editingHost) {
+                    renderMappings();
+                }
+            }
+        });
+    }
+
+    function loadUsage() {
+        return new Promise((resolve) => {
+            chrome.storage.local.get(['usage'], (result) => {
+                resolve(result.usage || {});
+            });
         });
     }
 
@@ -257,6 +408,12 @@ const ShortcutUI = (() => {
         } catch (error) {
             console.error('Error loading mappings:', error);
             mappings = {};
+        }
+        try {
+            usage = await loadUsage();
+        } catch (error) {
+            console.error('Error loading usage data:', error);
+            usage = {};
         }
         renderMappings();
         updateAddButtonState();

@@ -100,17 +100,36 @@ chrome.omnibox.onInputChanged.addListener(async (text, suggest) => {
     }
 });
 
+// Track how often each shortcut is used so the manager can sort by frecency
+function recordUsage(host) {
+    chrome.storage.local.get(['usage'], (result) => {
+        const usage = result.usage || {};
+        const entry = usage[host] || { count: 0, last: 0 };
+        const updated = {
+            ...usage,
+            [host]: { count: entry.count + 1, last: Date.now() }
+        };
+        chrome.storage.local.set({ usage: updated });
+    });
+}
+
 chrome.omnibox.onInputEntered.addListener(async (text, disposition) => {
+    let matchedHost;
     let destination;
     try {
         const mappings = await loadMappings();
         const query = text.trim().toLowerCase();
-        destination = mappings[query];
-        if (!destination) {
+        if (mappings[query]) {
+            matchedHost = query;
+        } else {
             const ranked = rankShortcuts(query, mappings);
             if (ranked.length > 0) {
-                destination = ranked[0].url;
+                matchedHost = ranked[0].host;
             }
+        }
+        if (matchedHost) {
+            destination = mappings[matchedHost];
+            recordUsage(matchedHost);
         }
     } catch (error) {
         console.error('Error resolving omnibox entry:', error);
