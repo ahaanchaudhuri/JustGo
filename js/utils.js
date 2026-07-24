@@ -120,13 +120,6 @@ function saveMappings(mappings) {
     });
 }
 
-// Escape HTML to prevent XSS
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
 // Path segments too generic to make good shortcut names
 const GENERIC_SEGMENTS = new Set([
     'index', 'home', 'watch', 'search', 'login', 'signin', 'signup',

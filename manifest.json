@@ -1,14 +1,14 @@
 {
     "manifest_version": 3,
     "name": "JustGo",
-    "version": "1.0",
-    "description": "A simple extension that lets you create your own custom URL shortcuts.",
+    "version": "1.0.0",
+    "description": "Your own URL shortcuts. Type yt/ or go yt in the address bar and land anywhere instantly. Local, private, fast.",
+    "minimum_chrome_version": "114",
     "icons": {
-        "16": "icons/logo64.jpeg",
-        "48": "icons/logo128.jpeg",
-        "128": "icons/logo128.jpeg",
-        "256": "icons/logo256.jpeg",
-        "512": "icons/logo512.jpeg"
+        "16": "icons/icon16.png",
+        "32": "icons/icon32.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
     },
     "permissions": [
         "activeTab",
@@ -26,9 +26,10 @@
     "action": {
         "default_title": "JustGo — manage shortcuts",
         "default_icon": {
-            "16": "icons/logo64.jpeg",
-            "48": "icons/logo128.jpeg",
-            "128": "icons/logo128.jpeg"
+            "16": "icons/icon16.png",
+            "32": "icons/icon32.png",
+            "48": "icons/icon48.png",
+            "128": "icons/icon128.png"
         }
     },
     "omnibox": {
@@ -43,7 +44,6 @@
         }
     },
     "options_page": "html/options.html",
-
     "side_panel": {
         "default_path": "html/sidepanel.html"
     }

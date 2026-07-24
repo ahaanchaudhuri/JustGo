@@ -3,7 +3,6 @@ const addForm = document.getElementById('addForm');
 const shortcutHostInput = document.getElementById('shortcutHost');
 const destinationUrlInput = document.getElementById('destinationUrl');
 const messageDiv = document.getElementById('message');
-const hostHint = document.getElementById('hostHint');
 const stepCreate = document.getElementById('stepCreate');
 const stepTry = document.getElementById('stepTry');
 const demoSlash = document.getElementById('demoSlash');
@@ -99,5 +98,12 @@ async function renderStarterChips() {
 }
 
 doneBtn.addEventListener('click', () => {
-    window.close();
+    // window.close() is unreliable for tabs the user didn't script-open
+    chrome.tabs.getCurrent((tab) => {
+        if (tab && tab.id !== undefined) {
+            chrome.tabs.remove(tab.id);
+        } else {
+            window.close();
+        }
+    });
 });
