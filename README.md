@@ -22,6 +22,8 @@ Your shortcuts are stored locally and sync across your Chrome profiles.
 
 - **Instant navigation** — type a shortcut name in the address bar to jump to any URL
 - **Omnibox integration** — `go` + `Tab` searches your shortcuts with live suggestions
+- **Parameterized shortcuts** — put `%s` in a destination (`github.com/search?q=%s`) and pass arguments: `go gh claude` or `gh/claude`
+- **Edit, search, and smart ordering** — edit shortcuts in place, filter with fuzzy search, most-used shortcuts float to the top
 - **Side panel UI** — manage shortcuts without leaving your current tab (`Ctrl+.` or the toolbar icon)
 - **Smart URL handling** — protocol added automatically if you leave it off
 - **Synced storage** — shortcuts saved via Chrome's sync storage, available on all your machines
@@ -55,6 +57,17 @@ Open the side panel with `Ctrl+.` (or click the toolbar icon) — the destinatio
 
 ### Manage shortcuts
 Open the side panel to view, edit, or delete any of your shortcuts.
+
+---
+
+## Privacy & Permissions
+
+Everything stays in your browser — no servers, no analytics, no data collection.
+
+- **`activeTab`** (not `tabs`) — JustGo can only see the current page's URL when *you* invoke it (toolbar icon, `Ctrl+.`, or the right-click menu), never your browsing in general
+- **Host access** — required by Chrome's redirect API (`declarativeNetRequest`) so that typing `yt/` can be intercepted and redirected; JustGo registers redirect rules only for the shortcut names you create and never reads page content
+- **`storage`** — your shortcuts, synced via your Chrome profile
+- **`contextMenus`**, **`sidePanel`** — the right-click capture and management UI
 
 ---
 

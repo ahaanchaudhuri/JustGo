@@ -11,11 +11,11 @@
         "512": "icons/logo512.jpeg"
     },
     "permissions": [
+        "activeTab",
         "contextMenus",
         "declarativeNetRequest",
         "storage",
-        "sidePanel",
-        "tabs"
+        "sidePanel"
     ],
     "host_permissions": [
         "*://*/*"
