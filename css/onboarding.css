@@ -92,6 +92,41 @@
     margin-top: 12px;
 }
 
+.starter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.starter-chip {
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1.5px solid rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.8);
+    color: #1D1D1F;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: -0.1px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.starter-chip:hover:not(:disabled) {
+    border-color: #007AFF;
+    color: #007AFF;
+    background: rgba(0, 122, 255, 0.06);
+    transform: translateY(-1px);
+}
+
+.starter-chip.added {
+    border-color: rgba(52, 199, 89, 0.4);
+    background: rgba(52, 199, 89, 0.12);
+    color: #1D7A3D;
+    cursor: default;
+}
+
 /* Dark Mode */
 @media (prefers-color-scheme: dark) {
     .step-label {
@@ -130,5 +165,23 @@
 
     .try-card-secondary {
         background: rgba(28, 28, 30, 0.6);
+    }
+
+    .starter-chip {
+        border: 1.5px solid rgba(255, 255, 255, 0.15);
+        background: rgba(44, 44, 46, 0.8);
+        color: #F5F5F7;
+    }
+
+    .starter-chip:hover:not(:disabled) {
+        border-color: #0A84FF;
+        color: #0A84FF;
+        background: rgba(10, 132, 255, 0.12);
+    }
+
+    .starter-chip.added {
+        border-color: rgba(52, 199, 89, 0.4);
+        background: rgba(52, 199, 89, 0.15);
+        color: #30D158;
     }
 }
