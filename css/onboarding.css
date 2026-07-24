@@ -1,46 +1,67 @@
+/* Onboarding: steps, try-it cards, starter chips (uses options.css tokens) */
+
 .onboarding-step {
-    animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: stepIn 320ms var(--ease) backwards;
+}
+
+@keyframes stepIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 .step-label {
+    font-family: var(--mono);
     font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.8px;
+    font-weight: 700;
+    letter-spacing: 1px;
     text-transform: uppercase;
-    color: #007AFF;
+    color: var(--accent);
     margin-bottom: 8px;
 }
 
 .onboarding-step h2 {
-    font-size: 22px;
+    font-size: 21px;
     font-weight: 700;
     letter-spacing: -0.4px;
-    color: #1D1D1F;
-    margin-bottom: 8px;
+    color: var(--text);
+    margin-bottom: 6px;
 }
 
 .step-description {
-    font-size: 15px;
-    color: #86868B;
-    letter-spacing: -0.2px;
-    margin-bottom: 24px;
+    font-size: 14px;
+    color: var(--text-2);
+    letter-spacing: -0.1px;
+    margin-bottom: 22px;
 }
 
 .try-card {
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    border-radius: 14px;
-    padding: 20px;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 12px;
+    transition: border-color var(--speed) var(--ease),
+                transform var(--speed) var(--ease),
+                box-shadow var(--speed) var(--ease);
+    animation: stepIn 320ms var(--ease) backwards;
+}
+
+.try-card:nth-child(3) { animation-delay: 60ms; }
+.try-card:nth-child(4) { animation-delay: 120ms; }
+.try-card:nth-child(5) { animation-delay: 180ms; }
+
+.try-card:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-1);
 }
 
 .try-card-title {
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.3px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
     text-transform: uppercase;
-    color: #86868B;
+    color: var(--text-3);
     margin-bottom: 12px;
 }
 
@@ -52,18 +73,26 @@
     flex-wrap: wrap;
 }
 
+/* keycaps */
 .try-card-demo kbd,
 .try-card-note kbd {
     display: inline-block;
     padding: 6px 12px;
     border-radius: 8px;
-    font-family: 'SF Mono', ui-monospace, Menlo, monospace;
-    font-size: 15px;
+    font-family: var(--mono);
+    font-size: 14px;
     font-weight: 600;
-    background: rgba(245, 245, 247, 0.9);
-    border: 1px solid rgba(0, 0, 0, 0.12);
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
-    color: #1D1D1F;
+    background: var(--surface-2);
+    border: 1px solid var(--border-strong);
+    box-shadow: 0 2px 0 var(--border-strong);
+    color: var(--text);
+    transition: transform var(--speed) var(--ease),
+                box-shadow var(--speed) var(--ease);
+}
+
+.try-card-demo kbd:hover {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 var(--border-strong);
 }
 
 .try-card-note kbd {
@@ -72,25 +101,30 @@
 }
 
 .try-card-then {
-    font-size: 13px;
-    color: #86868B;
+    font-size: 12px;
+    color: var(--text-3);
 }
 
 .try-card-note {
-    font-size: 14px;
-    color: #6E6E73;
+    font-size: 13px;
+    color: var(--text-2);
     letter-spacing: -0.1px;
-    line-height: 1.5;
-    margin: 0;
+    line-height: 1.55;
+}
+
+.try-card-note strong {
+    color: var(--text);
 }
 
 .try-card-secondary {
-    background: rgba(245, 245, 247, 0.6);
+    background: var(--surface-2);
 }
 
 #doneBtn {
-    margin-top: 12px;
+    margin-top: 10px;
 }
+
+/* ---------- Starter chips ---------- */
 
 .starter-chips {
     display: flex;
@@ -100,88 +134,43 @@
 }
 
 .starter-chip {
-    padding: 8px 14px;
+    padding: 7px 13px;
     border-radius: 999px;
-    border: 1.5px solid rgba(0, 0, 0, 0.1);
-    background: rgba(255, 255, 255, 0.8);
-    color: #1D1D1F;
-    font-family: inherit;
-    font-size: 13px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text-2);
+    font-family: var(--mono);
+    font-size: 12.5px;
     font-weight: 500;
     letter-spacing: -0.1px;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: border-color var(--speed) var(--ease),
+                color var(--speed) var(--ease),
+                background var(--speed) var(--ease),
+                transform var(--speed) var(--ease-pop);
 }
 
 .starter-chip:hover:not(:disabled) {
-    border-color: #007AFF;
-    color: #007AFF;
-    background: rgba(0, 122, 255, 0.06);
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
     transform: translateY(-1px);
 }
 
-.starter-chip.added {
-    border-color: rgba(52, 199, 89, 0.4);
-    background: rgba(52, 199, 89, 0.12);
-    color: #1D7A3D;
-    cursor: default;
+.starter-chip:active:not(:disabled) {
+    transform: scale(0.95);
 }
 
-/* Dark Mode */
-@media (prefers-color-scheme: dark) {
-    .step-label {
-        color: #0A84FF;
-    }
+.starter-chip.added {
+    border-color: color-mix(in srgb, var(--success) 40%, transparent);
+    background: var(--success-soft);
+    color: var(--success);
+    cursor: default;
+    animation: chipPop 300ms var(--ease-pop);
+}
 
-    .onboarding-step h2 {
-        color: #F5F5F7;
-    }
-
-    .step-description {
-        color: #98989D;
-    }
-
-    .try-card {
-        background: rgba(44, 44, 46, 0.8);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    }
-
-    .try-card-title {
-        color: #98989D;
-    }
-
-    .try-card-demo kbd,
-    .try-card-note kbd {
-        background: rgba(28, 28, 30, 0.9);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
-        color: #F5F5F7;
-    }
-
-    .try-card-note {
-        color: #98989D;
-    }
-
-    .try-card-secondary {
-        background: rgba(28, 28, 30, 0.6);
-    }
-
-    .starter-chip {
-        border: 1.5px solid rgba(255, 255, 255, 0.15);
-        background: rgba(44, 44, 46, 0.8);
-        color: #F5F5F7;
-    }
-
-    .starter-chip:hover:not(:disabled) {
-        border-color: #0A84FF;
-        color: #0A84FF;
-        background: rgba(10, 132, 255, 0.12);
-    }
-
-    .starter-chip.added {
-        border-color: rgba(52, 199, 89, 0.4);
-        background: rgba(52, 199, 89, 0.15);
-        color: #30D158;
-    }
+@keyframes chipPop {
+    0%   { transform: scale(0.9); }
+    60%  { transform: scale(1.06); }
+    100% { transform: scale(1); }
 }

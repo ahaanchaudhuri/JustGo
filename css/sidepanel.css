@@ -1,72 +1,56 @@
+/* Side panel layout: full-bleed, compact, sticky header */
+
 body {
     padding: 0;
-    background: linear-gradient(135deg, #F5F7FA 0%, #E8ECF1 100%);
+    display: block;
 }
 
 .container {
     max-width: 100%;
+    min-height: 100vh;
+    border: none;
     border-radius: 0;
     box-shadow: none;
-    border: none;
-    min-height: 100vh;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: transparent;
 }
 
 .header {
-    padding: 24px 24px 20px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 100%);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    flex-direction: row;
+    align-items: center;
+    padding: 14px 18px;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
 }
 
 .header h1 {
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: -0.4px;
-    color: #1D1D1F;
-    margin: 0;
-    text-align: left;
+    font-size: 16px;
+    letter-spacing: -0.3px;
 }
 
-.header p {
-    display: none;
-}
+.header p { display: none; }
 
 .content {
-    padding: 24px;
+    padding: 18px;
+}
+
+.add-form {
+    margin-bottom: 24px;
 }
 
 .shortcut-card {
-    padding: 14px 16px;
+    padding: 10px 12px;
 }
 
-.shortcut-name {
-    font-size: 15px;
+.shortcut-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
 }
 
-.shortcut-url {
-    font-size: 12px;
-}
-
-/* Dark Mode */
-@media (prefers-color-scheme: dark) {
-    body {
-        background: linear-gradient(135deg, #0A0A0B 0%, #1C1C1E 100%);
-    }
-
-    .container {
-        background: rgba(28, 28, 30, 0.95);
-        backdrop-filter: blur(20px) saturate(180%);
-        -webkit-backdrop-filter: blur(20px) saturate(180%);
-    }
-
-    .header {
-        background: linear-gradient(180deg, rgba(28, 28, 30, 0.5) 0%, rgba(28, 28, 30, 0) 100%);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .header h1 {
-        color: #F5F5F7;
-    }
-}
+.shortcut-name { font-size: 13px; }
+.shortcut-url { font-size: 11.5px; }

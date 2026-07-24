@@ -102,10 +102,12 @@ const ShortcutUI = (() => {
         el.shortcutsList.style.display = 'flex';
         el.emptyState.style.display = 'none';
         el.shortcutsList.innerHTML = '';
-        hosts.forEach(host => {
+        hosts.forEach((host, index) => {
             const card = host === editingHost
                 ? buildEditCard(host, mappings[host])
                 : buildCard(host, mappings[host]);
+            // stagger the entrance animation, capped so long lists stay snappy
+            card.style.setProperty('--i', Math.min(index, 10));
             el.shortcutsList.appendChild(card);
         });
     }
@@ -113,13 +115,14 @@ const ShortcutUI = (() => {
     function buildCard(host, url) {
         const card = document.createElement('div');
         card.className = 'shortcut-card';
+        card.setAttribute('data-host', host);
 
         const content = document.createElement('div');
         content.className = 'shortcut-card-content';
 
         const icon = document.createElement('div');
         icon.className = 'shortcut-icon';
-        icon.textContent = '🔗';
+        icon.textContent = host.charAt(0).toUpperCase();
         icon.setAttribute('aria-hidden', 'true');
 
         const info = document.createElement('div');
@@ -298,6 +301,12 @@ const ShortcutUI = (() => {
         try {
             await saveMappings(mappings);
             renderMappings();
+            const newCard = el.shortcutsList.querySelector(
+                `[data-host="${CSS.escape(normalizedHost)}"]`
+            );
+            if (newCard) {
+                newCard.classList.add('card-new');
+            }
             showUsageHint(normalizedHost);
             el.shortcutHost.value = '';
             el.destinationUrl.value = '';
