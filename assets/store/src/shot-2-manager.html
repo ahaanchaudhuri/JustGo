@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>manager</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 1280px; height: 800px; overflow: hidden; }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
+        background-color: #0B0D10;
+        background-image: radial-gradient(rgba(148, 163, 184, 0.09) 1px, transparent 1px);
+        background-size: 22px 22px;
+        color: #E9ECF0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 80px;
+        -webkit-font-smoothing: antialiased;
+    }
+    .pitch {
+        display: flex;
+        flex-direction: column;
+        gap: 26px;
+        max-width: 430px;
+    }
+    h1 {
+        font-size: 44px;
+        font-weight: 800;
+        letter-spacing: -1.4px;
+        line-height: 1.12;
+    }
+    h1 em { font-style: normal; color: #38BDF8; }
+    .points { display: flex; flex-direction: column; gap: 16px; }
+    .point {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 18px;
+        color: #9AA3AF;
+    }
+    .point::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #38BDF8;
+        flex-shrink: 0;
+    }
+    /* side panel mock built from real component styles */
+    .panel {
+        width: 400px;
+        background: #14171C;
+        border: 1px solid #242A33;
+        border-radius: 18px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+        overflow: hidden;
+    }
+    .panel-header {
+        display: flex;
+        align-items: center;
+        padding: 14px 18px;
+        border-bottom: 1px solid #242A33;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+        gap: 8px;
+    }
+    .panel-header::after {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #34D399;
+        box-shadow: 0 0 8px rgba(52, 211, 153, 0.7);
+    }
+    .panel-body { padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+    .label {
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: #636C79;
+        margin-bottom: 2px;
+    }
+    .search {
+        padding: 10px 14px;
+        border: 1px solid #242A33;
+        border-radius: 8px;
+        background: #1B2027;
+        color: #636C79;
+        font-size: 13px;
+        margin-bottom: 4px;
+    }
+    .card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 11px 13px;
+        background: #14171C;
+        border: 1px solid #242A33;
+        border-radius: 12px;
+    }
+    .card.new {
+        border-color: #38BDF8;
+        box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.12);
+    }
+    .tile {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9px;
+        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        font-size: 14px;
+        font-weight: 700;
+        color: #38BDF8;
+        background: rgba(56, 189, 248, 0.12);
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        flex-shrink: 0;
+    }
+    .card-info { flex: 1; min-width: 0; }
+    .card-name {
+        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 2px;
+    }
+    .card-url {
+        font-size: 11.5px;
+        color: #636C79;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .card-actions { display: flex; gap: 6px; }
+    .mini-btn {
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        border-radius: 8px;
+        border: 1px solid #242A33;
+        background: #14171C;
+    }
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        background: rgba(52, 211, 153, 0.12);
+        border: 1px solid rgba(52, 211, 153, 0.3);
+        color: #34D399;
+        font-size: 12.5px;
+        font-weight: 500;
+        margin-bottom: 4px;
+    }
+    .badge kbd {
+        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 5px;
+        background: #14171C;
+        border: 1px solid #333B47;
+        color: #E9ECF0;
+    }
+</style>
+</head>
+<body>
+    <div class="pitch">
+        <h1>Every shortcut, <em>one panel away</em></h1>
+        <div class="points">
+            <div class="point">Auto-filled with the page you're on</div>
+            <div class="point">Fuzzy search and edit-in-place</div>
+            <div class="point">Most-used shortcuts float to the top</div>
+            <div class="point">Synced across your Chrome profiles</div>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="panel-header">JustGo</div>
+        <div class="panel-body">
+            <div class="badge">Saved! Type <kbd>docs/</kbd> or <kbd>go docs</kbd> in the address bar.</div>
+            <div class="label">My Shortcuts</div>
+            <div class="search">Search shortcuts…</div>
+            <div class="card new">
+                <div class="tile">D</div>
+                <div class="card-info">
+                    <div class="card-name">docs/</div>
+                    <div class="card-url">https://docs.google.com/</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="tile">M</div>
+                <div class="card-info">
+                    <div class="card-name">mail/</div>
+                    <div class="card-url">https://mail.google.com/</div>
+                </div>
+                <div class="card-actions"><div class="mini-btn">✏️</div><div class="mini-btn">🗑</div></div>
+            </div>
+            <div class="card">
+                <div class="tile">G</div>
+                <div class="card-info">
+                    <div class="card-name">gh/</div>
+                    <div class="card-url">https://github.com/search?q=%s</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="tile">C</div>
+                <div class="card-info">
+                    <div class="card-name">claude-code/</div>
+                    <div class="card-url">https://github.com/anthropics/claude-code/</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="tile">Y</div>
+                <div class="card-info">
+                    <div class="card-name">yt/</div>
+                    <div class="card-url">https://youtube.com/</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

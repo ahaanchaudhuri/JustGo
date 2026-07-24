@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>capture</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 1280px; height: 800px; overflow: hidden; }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
+        background-color: #0B0D10;
+        background-image: radial-gradient(rgba(148, 163, 184, 0.09) 1px, transparent 1px);
+        background-size: 22px 22px;
+        color: #E9ECF0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 48px;
+        -webkit-font-smoothing: antialiased;
+    }
+    h1 {
+        font-size: 46px;
+        font-weight: 800;
+        letter-spacing: -1.5px;
+        text-align: center;
+    }
+    h1 em { font-style: normal; color: #38BDF8; }
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 460px);
+        gap: 22px;
+    }
+    .way {
+        background: #14171C;
+        border: 1px solid #242A33;
+        border-radius: 16px;
+        padding: 26px 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+    .way-title {
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 0.9px;
+        text-transform: uppercase;
+        color: #636C79;
+    }
+    .way-demo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    kbd {
+        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        font-size: 15px;
+        font-weight: 700;
+        padding: 8px 14px;
+        border-radius: 9px;
+        background: #1B2027;
+        border: 1px solid #333B47;
+        box-shadow: 0 2px 0 #333B47;
+        color: #E9ECF0;
+    }
+    kbd.accent { color: #38BDF8; border-color: rgba(56, 189, 248, 0.5); }
+    .way-note {
+        font-size: 14.5px;
+        color: #9AA3AF;
+        line-height: 1.5;
+    }
+    .menu-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 16px;
+        border-radius: 8px;
+        background: #1B2027;
+        border: 1px solid #333B47;
+        font-size: 14px;
+        color: #E9ECF0;
+    }
+    .check {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: rgba(52, 211, 153, 0.15);
+        color: #34D399;
+        font-size: 12px;
+        font-weight: 700;
+    }
+</style>
+</head>
+<body>
+    <h1>Save a shortcut in <em>seconds</em></h1>
+    <div class="grid">
+        <div class="way">
+            <div class="way-title">From the address bar</div>
+            <div class="way-demo">
+                <kbd>go</kbd><kbd>Tab</kbd><kbd class="accent">add docs</kbd><kbd>Enter</kbd><span class="check">✓</span>
+            </div>
+            <div class="way-note">Saves the page you're on — you never leave it. A badge flash confirms.</div>
+        </div>
+        <div class="way">
+            <div class="way-title">Right-click anything</div>
+            <div class="way-demo">
+                <span class="menu-item">JustGo: create shortcut for this page</span>
+            </div>
+            <div class="way-note">Works on pages and links. Opens the panel pre-filled.</div>
+        </div>
+        <div class="way">
+            <div class="way-title">One keystroke</div>
+            <div class="way-demo">
+                <kbd>Ctrl</kbd><span style="color:#636C79">+</span><kbd>.</kbd>
+            </div>
+            <div class="way-note">The side panel opens with the URL and a suggested name already filled in. Just press Enter.</div>
+        </div>
+        <div class="way">
+            <div class="way-title">Smart name suggestions</div>
+            <div class="way-demo">
+                <kbd>github.com/…/claude-code</kbd><span style="color:#636C79">→</span><kbd class="accent">claude-code</kbd>
+            </div>
+            <div class="way-note">JustGo reads the URL and proposes a short, typeable name.</div>
+        </div>
+    </div>
+</body>
+</html>

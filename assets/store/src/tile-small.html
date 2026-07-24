@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>tile</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 440px; height: 280px; overflow: hidden; }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
+        background-color: #0B0D10;
+        background-image: radial-gradient(rgba(148, 163, 184, 0.09) 1px, transparent 1px);
+        background-size: 18px 18px;
+        color: #E9ECF0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        -webkit-font-smoothing: antialiased;
+        position: relative;
+    }
+    .glow {
+        position: absolute;
+        top: -120px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 420px;
+        height: 260px;
+        background: radial-gradient(ellipse at center, rgba(56, 189, 248, 0.15), transparent 65%);
+    }
+    .brand-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    .brand-row img {
+        width: 52px;
+        height: 52px;
+        border-radius: 13px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), 0 0 0 1px #242A33;
+    }
+    h1 {
+        font-size: 38px;
+        font-weight: 800;
+        letter-spacing: -1.2px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    h1::after {
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #34D399;
+        box-shadow: 0 0 12px rgba(52, 211, 153, 0.8);
+    }
+    .demo-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    kbd {
+        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        font-size: 16px;
+        font-weight: 700;
+        padding: 7px 14px;
+        border-radius: 9px;
+        background: #1B2027;
+        border: 1px solid #333B47;
+        box-shadow: 0 2px 0 #333B47;
+        color: #38BDF8;
+    }
+    .arrow { font-size: 16px; color: #636C79; }
+    .dest {
+        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        font-size: 15px;
+        color: #34D399;
+    }
+    .tagline {
+        font-size: 14.5px;
+        color: #9AA3AF;
+        letter-spacing: -0.2px;
+    }
+</style>
+</head>
+<body>
+    <div class="glow"></div>
+    <div class="brand-row">
+        <img src="../../../icons/icon128.png" alt="">
+        <h1>JustGo</h1>
+    </div>
+    <div class="demo-row">
+        <kbd>yt/</kbd>
+        <span class="arrow">→</span>
+        <span class="dest">youtube.com</span>
+    </div>
+    <div class="tagline">Type a name, land on the page.</div>
+</body>
+</html>

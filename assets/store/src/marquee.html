@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>marquee</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 1400px; height: 560px; overflow: hidden; }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
+        background-color: #0B0D10;
+        background-image: radial-gradient(rgba(148, 163, 184, 0.09) 1px, transparent 1px);
+        background-size: 22px 22px;
+        color: #E9ECF0;
+        display: flex;
+        align-items: center;
+        -webkit-font-smoothing: antialiased;
+        position: relative;
+    }
+    .glow {
+        position: absolute;
+        top: -220px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 900px;
+        height: 460px;
+        background: radial-gradient(ellipse at center, rgba(56, 189, 248, 0.16), transparent 65%);
+        pointer-events: none;
+    }
+    .wrap {
+        display: flex;
+        align-items: center;
+        gap: 90px;
+        padding: 0 110px;
+        width: 100%;
+    }
+    .brand {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        flex: 1;
+    }
+    .brand-row {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+    }
+    .brand-row img {
+        width: 84px;
+        height: 84px;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 0 1px #242A33;
+    }
+    h1 {
+        font-size: 64px;
+        font-weight: 800;
+        letter-spacing: -2px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    h1::after {
+        content: '';
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #34D399;
+        box-shadow: 0 0 18px rgba(52, 211, 153, 0.8);
+    }
+    .tagline {
+        font-size: 27px;
+        font-weight: 500;
+        color: #9AA3AF;
+        letter-spacing: -0.5px;
+    }
+    .tagline strong { color: #E9ECF0; font-weight: 700; }
+    .demo {
+        display: flex;
+        flex-direction: column;
+        gap: 26px;
+        background: #14171C;
+        border: 1px solid #242A33;
+        border-radius: 22px;
+        padding: 44px 48px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+    }
+    .demo-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    kbd {
+        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        font-size: 24px;
+        font-weight: 700;
+        padding: 12px 22px;
+        border-radius: 12px;
+        background: #1B2027;
+        border: 1px solid #333B47;
+        box-shadow: 0 3px 0 #333B47;
+        color: #E9ECF0;
+    }
+    kbd.accent { color: #38BDF8; border-color: rgba(56, 189, 248, 0.5); }
+    .arrow { font-size: 24px; color: #636C79; }
+    .dest {
+        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        font-size: 21px;
+        color: #34D399;
+    }
+</style>
+</head>
+<body>
+    <div class="glow"></div>
+    <div class="wrap">
+        <div class="brand">
+            <div class="brand-row">
+                <img src="../../../icons/icon128.png" alt="">
+                <h1>JustGo</h1>
+            </div>
+            <div class="tagline">Your own URL shortcuts.<br><strong>Type a name, land on the page.</strong></div>
+        </div>
+        <div class="demo">
+            <div class="demo-row">
+                <kbd class="accent">yt/</kbd>
+                <span class="arrow">→</span>
+                <span class="dest">youtube.com</span>
+            </div>
+            <div class="demo-row">
+                <kbd class="accent">gh/claude</kbd>
+                <span class="arrow">→</span>
+                <span class="dest">github.com/search?q=claude</span>
+            </div>
+            <div class="demo-row">
+                <kbd>go</kbd>
+                <kbd>Tab</kbd>
+                <kbd class="accent">mail</kbd>
+                <span class="arrow">→</span>
+                <span class="dest">mail.google.com</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
